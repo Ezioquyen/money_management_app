@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.serializable.UserRecordId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,25 +9,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Component
-@Table(name = "payment_group")
-public class PaymentGroup {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "house_id")
-    private House house;
-    private String groupName;
-    @OneToMany(mappedBy = "paymentGroup")
+@Table(name = "user_record")
+public class UserRecord {
+    @EmbeddedId
+    UserRecordId id;
     @JsonIgnore
-    private Set<UserGroup> users;
+    @ManyToOne
+    @MapsId("recordId")
+    @JoinColumn(name = "record_id")
+    private Record record;
+    @JsonIgnore
+    @ManyToOne
+    @MapsId("participantId")
+    @JoinColumn(name = "participant_id")
+    private User participant;
 }

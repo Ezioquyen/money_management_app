@@ -11,6 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecordBody {
+
     private long money;
     private String date;
     private String information;

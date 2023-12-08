@@ -3,12 +3,13 @@ package com.example.demo.service;
 import com.example.demo.entity.House;
 import com.example.demo.entity.Record;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserRecord;
 import com.example.demo.model.dto.RecordBody;
 import com.example.demo.repository.HouseRepository;
 import com.example.demo.repository.RecordRepository;
+import com.example.demo.repository.UserRecordRepository;
 import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.example.demo.serializable.UserRecordId;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,16 +23,15 @@ public class RecordServiceImp implements RecordService{
     private final RecordRepository recordRepository;
     private final UserRepository userRepository;
     private final HouseRepository houseRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final UserRecordRepository userRecordRepository;
 
 
     @Autowired
-    public RecordServiceImp(RecordRepository recordRepository, UserRepository userRepository, HouseRepository houseRepository) {
+    public RecordServiceImp(RecordRepository recordRepository, UserRepository userRepository, HouseRepository houseRepository, UserRecordRepository userRecordRepository) {
         this.recordRepository = recordRepository;
         this.userRepository = userRepository;
         this.houseRepository = houseRepository;
+        this.userRecordRepository = userRecordRepository;
     }
 
     @Override
@@ -73,7 +73,6 @@ public class RecordServiceImp implements RecordService{
     public List<Record> getRecordByPayerAndOther(Integer payerId, String houseId) {
         return recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId,-1,houseId);
     }
-    @Transactional
     @Override
     public void createRecord(RecordBody recordBody) {
         User payer = userRepository.findById(recordBody.getPayerId()).orElseThrow();
@@ -88,14 +87,13 @@ public class RecordServiceImp implements RecordService{
         record.setPaid(recordBody.isPaid());
         record.setPayer(payer);
         record.setHouse(house);
-        record.setParticipants(participants);
         recordRepository.save(record);
         for (User participant : participants) {
-            String sql = "INSERT INTO user_record (record_id, participant_id) VALUES (:recordId, :participantId)";
-            entityManager.createNativeQuery(sql)
-                    .setParameter("recordId", record.getId())
-                    .setParameter("participantId", participant.getId())
-                    .executeUpdate();
+            UserRecord userRecord = new UserRecord();
+            userRecord.setId(new UserRecordId());
+            userRecord.setParticipant(participant);
+            userRecord.setRecord(record);
+            userRecordRepository.save(userRecord);
         }
     }
 

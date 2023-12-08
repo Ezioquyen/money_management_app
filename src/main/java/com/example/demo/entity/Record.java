@@ -34,7 +34,7 @@ public class Record {
     @JsonIgnore
     @JoinColumn(name = "house_id")
     private House house;
-    @ManyToMany(mappedBy = "records",cascade = {CascadeType.MERGE})
+    @OneToMany(mappedBy = "record")
     @JsonIgnore
-    private Set<User> participants;
+    private Set<UserRecord> participants;
 }

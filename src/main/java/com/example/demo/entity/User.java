@@ -24,17 +24,10 @@ public class User {
     private String username;
     private String email;
     private String password;
-    @ManyToMany
-    @JoinTable(name = "user_group",
-            joinColumns = @JoinColumn(name = "userid"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<PaymentGroup> paymentGroups;
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(name = "user_record",
-            joinColumns = @JoinColumn(name = "participant_id"),
-            inverseJoinColumns = @JoinColumn(name = "record_id"))
-    private Set<Record> records;
+    @OneToMany(mappedBy = "user")
+    private Set<UserGroup> paymentGroups;
+    @OneToMany(mappedBy = "participant")
+    private Set<UserRecord> records;
     @OneToMany(mappedBy = "user")
     private Set<UserHouse> userHouses;
 }

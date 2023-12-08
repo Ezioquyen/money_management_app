@@ -1,8 +1,7 @@
 package com.example.demo.model.dto;
 
-import com.example.demo.entity.PaymentGroup;
+import com.example.demo.entity.*;
 import com.example.demo.entity.Record;
-import com.example.demo.entity.UserHouse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
@@ -18,9 +17,9 @@ public class UserDTO {
     private String username;
     private String email;
     @JsonIgnore
-    private Set<PaymentGroup> paymentGroups;
+    private Set<UserGroup> paymentGroups;
     @JsonIgnore
     private Set<UserHouse> userHouses;
     @JsonIgnore
-    private Set<Record> Records;
+    private Set<UserRecord> Records;
 }

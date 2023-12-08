@@ -38,6 +38,7 @@ public class UserController {
     public ResponseEntity<?> getUserGroup(@PathVariable int id){
         return ResponseEntity.ok(userService.getUserGroups(id));
     }
+    //TODO
     @GetMapping("/{id}/house_check")
     public ResponseEntity<?> isUserHasHouses(@PathVariable int id){
         return ResponseEntity.ok(userService.existUserHouseByUserId(id));

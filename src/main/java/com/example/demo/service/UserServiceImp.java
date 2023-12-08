@@ -48,7 +48,7 @@ public class UserServiceImp implements UserService{
     @Override
     public Set<PaymentGroup> getUserGroups(Integer userId) {
         UserDTO user = UserMapper.toUserDto(userRepository.getUserById(userId));
-        return user.getPaymentGroups();
+        return null;
     }
 
     @Override
