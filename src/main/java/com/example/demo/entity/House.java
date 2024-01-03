@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -22,7 +23,7 @@ public class House {
     private String id;
     private String name;
     private String information;
-    private String date;
+    private Date date;
     @OneToMany(mappedBy = "house")
     @JsonIgnore
     private Set<UserHouse> userHouses;

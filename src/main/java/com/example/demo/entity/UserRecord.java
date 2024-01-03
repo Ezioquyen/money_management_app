@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Entity
 @Component
 @Table(name = "user_record")
+
 public class UserRecord {
     @EmbeddedId
     UserRecordId id;

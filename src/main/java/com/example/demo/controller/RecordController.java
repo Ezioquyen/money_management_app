@@ -1,12 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Record;
 import com.example.demo.model.dto.RecordBody;
 import com.example.demo.service.RecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/records")
@@ -16,46 +13,73 @@ public class RecordController {
     public RecordController(RecordService recordService) {
         this.recordService = recordService;
     }
-    @GetMapping("{id}")
-    public ResponseEntity<?> getAllRecord(@PathVariable String id){
-        List<Record> records = recordService.getAllRecord();
-        return ResponseEntity.ok(records);
-    }
+
     @GetMapping("/{houseId}/{userId}")
-    public ResponseEntity<?> getAllRecordsByUsersAndHouse(@PathVariable Integer userId,@PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getAllRecordByUsersAndHouse(userId,houseId));
+    public ResponseEntity<?> getAllRecordsByUsersAndHouse(@PathVariable Integer userId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getAllRecordByUsersAndHouse(userId, houseId, year, month));
     }
+
     @GetMapping("/{houseId}/{userId}/{groupId}")
-    public ResponseEntity<?> getRecordsByUsersAndGroup(@PathVariable Integer userId, @PathVariable Integer groupId, @PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getRecordByUsersAndGroup(userId,groupId,houseId));
+    public ResponseEntity<?> getRecordsByUsersAndGroup(@PathVariable Integer userId, @PathVariable Integer groupId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getRecordByUsersAndGroup(userId, groupId, houseId, year, month));
     }
+
     @GetMapping("/payer/{houseId}/{payerId}")
-    public ResponseEntity<?> getAllRecordsByPayerAndHouse(@PathVariable Integer payerId,@PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getAllRecordByPayerAndHouse(payerId,houseId));
+    public ResponseEntity<?> getAllRecordsByPayerAndHouse(@PathVariable Integer payerId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getAllRecordByPayerAndHouse(payerId, houseId, year, month));
     }
+
     @GetMapping("/payer/{houseId}/{payerId}/{groupId}")
-    public ResponseEntity<?> getRecordsByPayerAndGroup(@PathVariable Integer payerId, @PathVariable Integer groupId, @PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getRecordByPayerAndGroup(payerId,groupId,houseId));
+    public ResponseEntity<?> getRecordsByPayerAndGroup(@PathVariable Integer payerId, @PathVariable Integer groupId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getRecordByPayerAndGroup(payerId, groupId, houseId, year, month));
     }
+
     @GetMapping("/payer/other/{houseId}/{payerId}")
-    public ResponseEntity<?> getRecordsByPayerOther(@PathVariable Integer payerId, @PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getRecordByPayerAndOther(payerId, houseId));
+    public ResponseEntity<?> getRecordsByPayerOther(@PathVariable Integer payerId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getRecordByPayerAndOther(payerId, houseId, year, month));
     }
+
     @GetMapping("/other/{houseId}/{userId}")
-    public ResponseEntity<?> getRecordsByUserOther(@PathVariable Integer userId, @PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getRecordByUsersAndOther(userId, houseId));
+    public ResponseEntity<?> getRecordsByUserOther(@PathVariable Integer userId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getRecordByUsersAndOther(userId, houseId, year, month));
     }
+
     @GetMapping("/house/{houseId}")
-    public ResponseEntity<?> getRecordsByUserAndGroup( @PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getRecordByHouseForAllMember(houseId));
+    public ResponseEntity<?> getRecordsByHouseForAllMember(@PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getRecordByHouseForAllMember(houseId, year, month));
     }
+
     @GetMapping("/payer/house/{houseId}/{payerId}")
-    public ResponseEntity<?> getRecordsByPayerAndGroup(@PathVariable Integer payerId, @PathVariable String houseId){
-        return ResponseEntity.ok(recordService.getRecordByPayerAndHouse(payerId,houseId));
+    public ResponseEntity<?> getRecordsByPayerAndHouse(@PathVariable Integer payerId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return ResponseEntity.ok(recordService.getRecordByPayerAndHouse(payerId, houseId, year, month));
     }
+
     @PostMapping("/create")
-    public String createRecord(@RequestBody RecordBody recordBody){
-        recordService.createRecord(recordBody);
+    public String createRecord(@RequestBody RecordBody recordBody) {
+        recordService.createRecord(recordBody, 0);
         return "done";
     }
+
+    @PutMapping("/save/{id}")
+    public String saveRecord(@RequestBody RecordBody recordBody, @PathVariable Integer id) {
+        recordService.createRecord(recordBody, id);
+        return "done";
+    }
+
+    @GetMapping("/date/{houseId}")
+    public ResponseEntity<?> findDateOfRecords(@PathVariable String houseId) {
+        return ResponseEntity.ok(recordService.findDateOfRecords(houseId));
+    }
+
+    @GetMapping("/paid/{houseId}/{userId}")
+    public Integer findPaidMoneyByDate(@PathVariable Integer userId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return recordService.findPaidMoneyByDate(userId, houseId, year, month);
+    }
+
+    @GetMapping("/debt/{houseId}/{userId}")
+    public Integer findDebtMoneyByDate(@PathVariable Integer userId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
+        return recordService.findDebtMoneyByDate(userId, houseId, year, month);
+    }
+
+
 }

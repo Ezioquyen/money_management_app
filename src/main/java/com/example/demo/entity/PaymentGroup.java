@@ -25,7 +25,7 @@ public class PaymentGroup {
     @ManyToOne
     @JoinColumn(name = "house_id")
     private House house;
-    private String groupName;
+    private String name;
     @OneToMany(mappedBy = "paymentGroup")
     @JsonIgnore
     private Set<UserGroup> users;

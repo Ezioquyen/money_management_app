@@ -5,6 +5,6 @@ import com.example.demo.model.dto.UserDTO;
 
 public class UserMapper {
     public static UserDTO toUserDto(User user){
-        return new UserDTO(user.getId(),user.getUsername(), user.getEmail(),user.getPaymentGroups(),user.getUserHouses(),user.getRecords());
+        return new UserDTO(user.getId(),user.getUsername(), user.getEmail());
     }
 }

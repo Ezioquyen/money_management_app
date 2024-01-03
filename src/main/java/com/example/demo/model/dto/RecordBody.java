@@ -5,17 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecordBody {
+    private Integer id;
 
     private long money;
-    private String date;
+    private Date date;
     private String information;
-    private int group;
+    private int paymentGroup;
     private boolean paid;
     private int payerId;
     private String houseId;

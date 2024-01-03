@@ -3,10 +3,13 @@ package com.example.demo.serializable;
 import com.example.demo.entity.UserGroup;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+@Getter
+@Setter
 @Embeddable
 public class UserGroupId implements Serializable {
     @Column(name = "group_id")

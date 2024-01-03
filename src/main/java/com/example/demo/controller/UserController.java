@@ -24,22 +24,25 @@ public class UserController {
         List<UserDTO> users = userService.getAllUser();
         return ResponseEntity.ok(users);
     }
-    @GetMapping("/{email}")
-    public ResponseEntity<?> getUserByEmail(@PathVariable String email){
-        UserDTO user = userService.getUserDTOByEmail(email);
-        return ResponseEntity.ok(user);
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable Integer id){
+
+        return ResponseEntity.ok(userService.getUserDTOById(id));
     }
-    @GetMapping("/{email}/houses")
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email){
+        return ResponseEntity.ok(userService.getUserDTOByEmail(email));
+    }
+    @GetMapping("/houses/{email}")
     public ResponseEntity<?> getListHouseOfUser(@PathVariable String email){
         return ResponseEntity.ok(userService.getHouseByEmail(email));
     }
 
-    @GetMapping("/{id}/groups")
+    @GetMapping("/groups/{id}")
     public ResponseEntity<?> getUserGroup(@PathVariable int id){
         return ResponseEntity.ok(userService.getUserGroups(id));
     }
-    //TODO
-    @GetMapping("/{id}/house_check")
+    @GetMapping("/house_check/{id}")
     public ResponseEntity<?> isUserHasHouses(@PathVariable int id){
         return ResponseEntity.ok(userService.existUserHouseByUserId(id));
     }

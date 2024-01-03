@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.House;
-import com.example.demo.entity.User;
+
 import com.example.demo.entity.UserHouse;
 import com.example.demo.model.dto.UserDTO;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.UserGroup;
+import com.example.demo.model.dto.PaymentGroupBody;
 import com.example.demo.service.PaymentGroupService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/groups")
@@ -14,8 +14,28 @@ public class PaymentGroupController {
     public PaymentGroupController(PaymentGroupService paymentGroupService) {
         this.paymentGroupService = paymentGroupService;
     }
-    @GetMapping("")
-    public ResponseEntity<?> getAllGroup(){
-        return ResponseEntity.ok(paymentGroupService.getAllPaymentGroup());
+    @PostMapping("/create")
+    public String createGroup(@RequestBody PaymentGroupBody paymentGroupBody){
+        paymentGroupService.createGroup(paymentGroupBody);
+        return "done";
     }
+    @PostMapping("/add")
+    public String addMember(@RequestBody UserGroup userGroup){
+        paymentGroupService.addUserToGroup(userGroup);
+        return  "done";
+    }
+    @GetMapping("/{houseId}/{userId}")
+    public ResponseEntity<?> getGroupByUserAndHouse(@PathVariable String houseId, @PathVariable Integer userId){
+        return ResponseEntity.ok(paymentGroupService.getPaymentGroupByUserIdAndHouseId(userId, houseId));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getGroupById(@PathVariable Integer id){
+        return ResponseEntity.ok(paymentGroupService.getPaymentGroupById(id));
+    }
+    @GetMapping("/house/{houseId}")
+    public ResponseEntity<?> getGroupByHouse(@PathVariable String houseId){
+        return ResponseEntity.ok(paymentGroupService.getPaymentGroupByHouseId(houseId));
+    }
+
+
 }

@@ -36,6 +36,11 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    public UserDTO getUserDTOById(Integer id) {
+        return UserMapper.toUserDto(userRepository.getUserById(id));
+    }
+
+    @Override
     public List<UserDTO> getAllUser(){
         List<UserDTO> userDTOList = new ArrayList<>();
         for(User user : userRepository.findAll()){
@@ -75,8 +80,14 @@ public class UserServiceImp implements UserService{
         return houseWithRoles;
     }
 
+
     @Override
-    public boolean existUserHouseByUserId(int id) {
+    public void updateUserToken(Integer id,String deviceToken) {
+        userRepository.updateDeviceTokenById(id,deviceToken);
+    }
+
+    @Override
+    public boolean existUserHouseByUserId(Integer id) {
         return userHouseRepository.existsUserHouseByUser_Id(id);
     }
 

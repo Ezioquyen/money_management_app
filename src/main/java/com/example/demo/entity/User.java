@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,10 +25,13 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private String deviceToken;
     @OneToMany(mappedBy = "user")
     private Set<UserGroup> paymentGroups;
     @OneToMany(mappedBy = "participant")
     private Set<UserRecord> records;
     @OneToMany(mappedBy = "user")
     private Set<UserHouse> userHouses;
+    @OneToMany(mappedBy = "user")
+    private List<UserNotification> notifications;
 }

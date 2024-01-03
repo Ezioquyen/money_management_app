@@ -12,6 +12,7 @@ import java.util.Set;
 @Service
 public interface UserService {
     public User getUserById(Integer id);
+    public UserDTO getUserDTOById(Integer id);
     public List<UserDTO> getAllUser();
     public UserDTO getUserDTOByEmail(String email);
     public Set<PaymentGroup> getUserGroups(Integer userId);
@@ -19,5 +20,6 @@ public interface UserService {
     public void saveUser(User user);
     public boolean isEmailExist(String email);
     public Set<HouseWithRole> getHouseByEmail(String email);
-    public boolean existUserHouseByUserId(int id);
+    public boolean existUserHouseByUserId(Integer id);
+    public void updateUserToken(Integer id, String deviceToken);
 }

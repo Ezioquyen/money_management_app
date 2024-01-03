@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -22,7 +23,8 @@ public class Record {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private long money;
-    private String date;
+    @Temporal(TemporalType.DATE)
+    private Date date;
     private String information;
     private int paymentGroup;
     private boolean paid;

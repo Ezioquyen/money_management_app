@@ -5,21 +5,19 @@ import com.example.demo.entity.Record;
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserRecord;
 import com.example.demo.model.dto.RecordBody;
+import com.example.demo.model.mapper.RecordMapper;
 import com.example.demo.repository.HouseRepository;
 import com.example.demo.repository.RecordRepository;
 import com.example.demo.repository.UserRecordRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.serializable.UserRecordId;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
-public class RecordServiceImp implements RecordService{
+public class RecordServiceImp implements RecordService {
     private final RecordRepository recordRepository;
     private final UserRepository userRepository;
     private final HouseRepository houseRepository;
@@ -34,63 +32,96 @@ public class RecordServiceImp implements RecordService{
         this.userRecordRepository = userRecordRepository;
     }
 
+
     @Override
-    public List<Record> getAllRecord() {
-        return recordRepository.findAll();
+    public List<RecordBody> getAllRecordByUsersAndHouse(Integer userId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByParticipants(userId, houseId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getAllRecordByUsersAndHouse(Integer userId, String houseId) {
-        return recordRepository.findRecordsByParticipants(userId,houseId);
+    public List<RecordBody> getRecordByHouseForAllMember(String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByHouseForAllMember(houseId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getRecordByHouseForAllMember(String houseId) {
-        return recordRepository.findRecordsByHouseForAllMember(houseId);
+    public List<RecordBody> getAllRecordByPayerAndHouse(Integer payerId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByPayer_IdAndHouse_Id(payerId, houseId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getAllRecordByPayerAndHouse(Integer payerId, String houseId) {
-        return recordRepository.findRecordsByPayer_IdAndHouse_Id(payerId,houseId);
+    public List<RecordBody> getRecordByPayerAndGroup(Integer payerId, Integer groupId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId, groupId, houseId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getRecordByPayerAndGroup(Integer payerId, Integer groupId, String houseId) {
-        return recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId, groupId, houseId);
+    public List<RecordBody> getRecordByPayerAndHouse(Integer payerId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId, 0, houseId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getRecordByPayerAndHouse(Integer payerId, String houseId) {
-        return recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId, 0 ,houseId);
+    public List<RecordBody> getRecordByUsersAndOther(Integer userId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByParticipantsAndPaymentGroup(userId, houseId, -1, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getRecordByUsersAndOther(Integer userId, String houseId) {
-        return recordRepository.findRecordsByParticipantsAndPaymentGroup(userId,houseId,-1);
+    public List<RecordBody> getRecordByPayerAndOther(Integer payerId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId, -1, houseId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 
     @Override
-    public List<Record> getRecordByPayerAndOther(Integer payerId, String houseId) {
-        return recordRepository.findRecordsByPayer_IdAndPaymentGroupAndHouse_Id(payerId,-1,houseId);
-    }
-    @Override
-    public void createRecord(RecordBody recordBody) {
+    public void createRecord(RecordBody recordBody, Integer id) {
         User payer = userRepository.findById(recordBody.getPayerId()).orElseThrow();
         House house = houseRepository.findById(recordBody.getHouseId()).orElseThrow();
         Set<User> participants = new HashSet<>(userRepository.findAllById(recordBody.getParticipantIds()));
 
         Record record = new Record();
+        if (id != 0) {
+            record.setId(id);
+        }
         record.setMoney(recordBody.getMoney());
         record.setDate(recordBody.getDate());
         record.setInformation(recordBody.getInformation());
-        record.setPaymentGroup(recordBody.getGroup());
+        record.setPaymentGroup(recordBody.getPaymentGroup());
         record.setPaid(recordBody.isPaid());
         record.setPayer(payer);
         record.setHouse(house);
         recordRepository.save(record);
         for (User participant : participants) {
             UserRecord userRecord = new UserRecord();
-            userRecord.setId(new UserRecordId());
+            UserRecordId userRecordId = new UserRecordId();
+            if (id != 0) {
+                userRecordId.setRecordId(id);
+                userRecordId.setParticipantId(participant.getId());
+            }
+            userRecord.setId(userRecordId);
             userRecord.setParticipant(participant);
             userRecord.setRecord(record);
             userRecordRepository.save(userRecord);
@@ -98,7 +129,26 @@ public class RecordServiceImp implements RecordService{
     }
 
     @Override
-    public List<Record> getRecordByUsersAndGroup(Integer userId, Integer groupId, String houseId) {
-        return recordRepository.findRecordsByParticipantsAndPaymentGroup(userId, houseId, groupId);
+    public List<Object> findDateOfRecords(String houseId) {
+        return recordRepository.findDateOfRecord(houseId);
+    }
+
+    @Override
+    public Integer findPaidMoneyByDate(Integer userId, String houseId, String year, String month) {
+        return recordRepository.findPaidMoneyByDate(userId, houseId, year, month)==null?0:recordRepository.findPaidMoneyByDate(userId, houseId, year, month);
+    }
+
+    @Override
+    public Integer findDebtMoneyByDate(Integer userId, String houseId, String year, String month) {
+        return recordRepository.findDebtMoneyByDate(userId, houseId, year, month)==null?0:recordRepository.findDebtMoneyByDate(userId, houseId, year, month);
+    }
+
+    @Override
+    public List<RecordBody> getRecordByUsersAndGroup(Integer userId, Integer groupId, String houseId, String year, String month) {
+        List<RecordBody> recordBodyList = new ArrayList<>();
+        for (Record record : recordRepository.findRecordsByParticipantsAndPaymentGroup(userId, houseId, groupId, year, month)) {
+            recordBodyList.add(RecordMapper.toRecordBody(record));
+        }
+        return recordBodyList;
     }
 }
