@@ -19,16 +19,13 @@ import java.util.*;
 @Component
 public class RecordServiceImp implements RecordService {
     private final RecordRepository recordRepository;
-    private final UserRepository userRepository;
-    private final HouseRepository houseRepository;
+
     private final UserRecordRepository userRecordRepository;
 
 
     @Autowired
     public RecordServiceImp(RecordRepository recordRepository, UserRepository userRepository, HouseRepository houseRepository, UserRecordRepository userRecordRepository) {
         this.recordRepository = recordRepository;
-        this.userRepository = userRepository;
-        this.houseRepository = houseRepository;
         this.userRecordRepository = userRecordRepository;
     }
 
@@ -97,32 +94,33 @@ public class RecordServiceImp implements RecordService {
     }
 
     @Override
-    public void createRecord(RecordBody recordBody, Integer id) {
-        User payer = userRepository.findById(recordBody.getPayerId()).orElseThrow();
-        House house = houseRepository.findById(recordBody.getHouseId()).orElseThrow();
-        Set<User> participants = new HashSet<>(userRepository.findAllById(recordBody.getParticipantIds()));
-
+    public void saveRecord(RecordBody recordBody, String id) {
         Record record = new Record();
-        if (id != 0) {
-            record.setId(id);
-        }
+
+        record.setId(id);
         record.setMoney(recordBody.getMoney());
         record.setDate(recordBody.getDate());
         record.setInformation(recordBody.getInformation());
         record.setPaymentGroup(recordBody.getPaymentGroup());
         record.setPaid(recordBody.isPaid());
+        User payer = new User();
+        payer.setId(recordBody.getPayerId());
+        House house = new House();
+        house.setId(recordBody.getHouseId());
         record.setPayer(payer);
         record.setHouse(house);
         recordRepository.save(record);
-        for (User participant : participants) {
+        for (Integer participantId : recordBody.getParticipantIds()) {
             UserRecord userRecord = new UserRecord();
             UserRecordId userRecordId = new UserRecordId();
-            if (id != 0) {
+            if (!Objects.equals(id, "")) {
                 userRecordId.setRecordId(id);
-                userRecordId.setParticipantId(participant.getId());
+                userRecordId.setParticipantId(participantId);
             }
             userRecord.setId(userRecordId);
-            userRecord.setParticipant(participant);
+            User user = new User();
+            user.setId(participantId);
+            userRecord.setParticipant(user);
             userRecord.setRecord(record);
             userRecordRepository.save(userRecord);
         }
@@ -141,6 +139,12 @@ public class RecordServiceImp implements RecordService {
     @Override
     public Integer findDebtMoneyByDate(Integer userId, String houseId, String year, String month) {
         return recordRepository.findDebtMoneyByDate(userId, houseId, year, month)==null?0:recordRepository.findDebtMoneyByDate(userId, houseId, year, month);
+    }
+
+    @Override
+    public RecordBody getRecordById(String id) {
+
+        return RecordMapper.toRecordBody(recordRepository.getRecordById(id));
     }
 
     @Override

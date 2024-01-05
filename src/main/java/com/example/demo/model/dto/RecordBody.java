@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecordBody {
-    private Integer id;
+    private String id;
 
     private long money;
     private Date date;

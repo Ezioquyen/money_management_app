@@ -12,26 +12,29 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 
 import java.time.LocalDateTime;
 
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class NotificationServiceImp implements NotificationService{
     private final FirebaseMessaging firebaseMessaging;
+    private final  UserRepository userRepository;
      private final NotificationRepository notificationRepository;
-     private final UserRepository userRepository;
+
      private final UserNotificationRepository userNotificationRepository;
 
-    public NotificationServiceImp(FirebaseMessaging firebaseMessaging, NotificationRepository notificationRepository, UserRepository userRepository, UserNotificationRepository userNotificationRepository) {
+    public NotificationServiceImp(FirebaseMessaging firebaseMessaging, NotificationRepository notificationRepository, UserRepository userRepository, UserRepository userRepository1, UserNotificationRepository userNotificationRepository) {
         this.firebaseMessaging = firebaseMessaging;
         this.notificationRepository = notificationRepository;
-        this.userRepository = userRepository;
+        this.userRepository = userRepository1;
         this.userNotificationRepository = userNotificationRepository;
     }
 
@@ -48,12 +51,12 @@ public class NotificationServiceImp implements NotificationService{
         notification.setNotificationText(body.get("notificationText").toString());
         if(body.get("image")!=null) notification.setImage(body.get("image").toString());
         notification.setName(body.get("name").toString());
-        notification.setIsRead((Boolean) body.get("isRead"));
-        notification.setTime(LocalDateTime.parse(body.get("time").toString()));
+        notification.setIsRead(false);
+        notification.setTime(LocalDateTime.parse(body.get("time").toString(), DateTimeFormatter.ofPattern("ss:mm:HH dd/MM/yyyy")));
         notificationRepository.save(notification);
+        List<User> users = userRepository.findAllById( (List<Integer>) body.get("userIds"));
         if( body.get("userIds")!=null) {
-            for (Integer userId : (List<Integer>) body.get("userIds")) {
-                User user = userRepository.getUserById(userId);
+            for (User user : users) {
                 if (user.getDeviceToken() != null) {
                     PnsRequest request = new PnsRequest();
                     request.setFcmToken(user.getDeviceToken());
@@ -88,6 +91,16 @@ public class NotificationServiceImp implements NotificationService{
     @Override
     public Integer getUnReadNotificationByUserId(Integer integer) {
         return notificationRepository.getUnreadNotificationByUserId(integer);
+    }
+
+    @Override
+    public void readNotification(Integer notificationId) {
+        notificationRepository.readNotificationById(notificationId);
+    }
+
+    @Override
+    public void readAllNotificationByUserId(Integer userId) {
+        notificationRepository.readAllNotificationByUserId(userId);
     }
 
 }

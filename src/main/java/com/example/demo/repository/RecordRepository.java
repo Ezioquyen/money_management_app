@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RecordRepository extends JpaRepository<Record, Integer> {
+public interface RecordRepository extends JpaRepository<Record, String> {
     @Query(value = "SELECT * FROM record r " +
             "JOIN user_record ur ON r.id = ur.record_id " +
             "WHERE  ur.participant_id = :userId AND r.house_id = :houseId AND year(r.date) = :year AND month(r.date) = :month ORDER BY r.date desc ", nativeQuery = true)
@@ -42,4 +42,5 @@ public interface RecordRepository extends JpaRepository<Record, Integer> {
     Integer findDebtMoneyByDate(@Param("userId") Integer userId, @Param("houseId") String houseId, @Param("year") String year, @Param("month") String month);
     @Query(value = "SELECT sum(record.money) from  record where payer_id = :userId AND year(date) = :year AND month(date) = :month AND house_id = :houseId",nativeQuery = true)
     Integer findPaidMoneyByDate(@Param("userId") Integer userId, @Param("houseId") String houseId, @Param("year") String year, @Param("month") String month);
+    Record getRecordById(String id);
 }

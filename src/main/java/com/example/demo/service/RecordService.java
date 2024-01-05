@@ -18,8 +18,9 @@ public interface RecordService {
     public List<RecordBody> getRecordByPayerAndHouse(Integer payerId, String houseId,String year, String month);
     public List<RecordBody> getRecordByUsersAndOther(Integer userId, String houseId,String year, String month);
     public List<RecordBody> getRecordByPayerAndOther(Integer payerId, String houseId,String year, String month);
-    public void createRecord(RecordBody recordBody, Integer id);
+    public void saveRecord(RecordBody recordBody, String id);
     public List<Object> findDateOfRecords(String houseId);
     public Integer findPaidMoneyByDate( Integer userId,String houseId,  String year, String month);
     public Integer findDebtMoneyByDate( Integer userId, String houseId, String year, String month);
+    public RecordBody getRecordById(String id);
 }

@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Embeddable
 public class UserRecordId implements Serializable {
     @Column(name = "record_id")
-    Integer recordId;
+    String recordId;
     @Column(name="participant_id")
     Integer participantId;
 }

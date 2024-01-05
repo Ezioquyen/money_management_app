@@ -54,15 +54,11 @@ public class RecordController {
         return ResponseEntity.ok(recordService.getRecordByPayerAndHouse(payerId, houseId, year, month));
     }
 
-    @PostMapping("/create")
-    public String createRecord(@RequestBody RecordBody recordBody) {
-        recordService.createRecord(recordBody, 0);
-        return "done";
-    }
+
 
     @PutMapping("/save/{id}")
-    public String saveRecord(@RequestBody RecordBody recordBody, @PathVariable Integer id) {
-        recordService.createRecord(recordBody, id);
+    public String saveRecord(@RequestBody RecordBody recordBody, @PathVariable String id) {
+        recordService.saveRecord(recordBody, id);
         return "done";
     }
 
@@ -79,6 +75,10 @@ public class RecordController {
     @GetMapping("/debt/{houseId}/{userId}")
     public Integer findDebtMoneyByDate(@PathVariable Integer userId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
         return recordService.findDebtMoneyByDate(userId, houseId, year, month);
+    }
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<?> getRecordById(@PathVariable("id") String id){
+        return ResponseEntity.ok(recordService.getRecordById(id));
     }
 
 

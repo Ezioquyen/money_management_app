@@ -20,8 +20,7 @@ import java.util.Set;
 @Table(name = "record")
 public class Record {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;
     private long money;
     @Temporal(TemporalType.DATE)
     private Date date;
