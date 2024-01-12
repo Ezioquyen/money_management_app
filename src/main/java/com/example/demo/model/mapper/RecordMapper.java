@@ -11,10 +11,13 @@ import java.util.Set;
 
 public class RecordMapper {
     public static RecordBody toRecordBody(Record record) {
-        Set<Integer> participantIds = new HashSet<>();
-        for(UserRecord participant: record.getParticipants()){
-            participantIds.add(participant.getParticipant().getId());
+        if (record != null) {
+            Set<Integer> participantIds = new HashSet<>();
+            for (UserRecord participant : record.getParticipants()) {
+                participantIds.add(participant.getParticipant().getId());
+            }
+            return new RecordBody(record.getId(), record.getMoney(), record.getDate(), record.getInformation(), record.getPaymentGroup(), record.isPaid(), UserMapper.toUserDto(record.getPayer()), record.getHouse().getId(), participantIds);
         }
-        return new RecordBody(record.getId(),record.getMoney(), record.getDate(), record.getInformation(), record.getPaymentGroup(), record.isPaid(), record.getPayer().getId(), record.getHouse().getId(),participantIds);
+        else return null;
     }
 }

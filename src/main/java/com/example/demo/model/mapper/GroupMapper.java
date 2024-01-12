@@ -4,13 +4,13 @@ import com.example.demo.entity.PaymentGroup;
 import com.example.demo.entity.UserGroup;
 import com.example.demo.model.dto.PaymentGroupBody;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupMapper {
     public static PaymentGroupBody toPaymentGroupBody(PaymentGroup paymentGroup) {
 
-        Set<Integer> userIds = new HashSet<>();
+        List<Integer> userIds = new ArrayList<>();
         for (UserGroup userGroup : paymentGroup.getUsers()) {
             userIds.add(userGroup.getUser().getId());
         }

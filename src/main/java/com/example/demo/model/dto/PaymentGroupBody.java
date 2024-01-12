@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentGroupBody {
     private Integer id;
-    private String houseId;
-    private String name;
-    Set<Integer> userIds;
+    private String houseId ;
+    private String name ;
+    List<Integer> userIds;
 }

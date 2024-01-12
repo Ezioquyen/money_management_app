@@ -1,14 +1,17 @@
 package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -23,7 +26,7 @@ public class House {
     private String id;
     private String name;
     private String information;
-    private Date date;
+    private LocalDate date;
     @OneToMany(mappedBy = "house")
     @JsonIgnore
     private Set<UserHouse> userHouses;

@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,5 +31,7 @@ public class UserHouse {
     @MapsId("userId")
     @JoinColumn(name = "userid")
     private User user;
+    private LocalDate joinDate;
+    private LocalDate leaveDate;
     private boolean userRole;
 }

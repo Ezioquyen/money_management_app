@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -22,11 +22,11 @@ public class Record {
     @Id
     private String id;
     private long money;
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
     private String information;
     private int paymentGroup;
     private boolean paid;
+    private Boolean isRemoved;
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "payer_id")

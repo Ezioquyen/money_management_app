@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 @Getter
 @Setter
@@ -15,11 +15,12 @@ public class RecordBody {
     private String id;
 
     private long money;
-    private Date date;
+    private LocalDate date;
     private String information;
     private int paymentGroup;
     private boolean paid;
-    private int payerId;
+    private UserDTO payer;
     private String houseId;
+
     private Set<Integer> participantIds;
 }

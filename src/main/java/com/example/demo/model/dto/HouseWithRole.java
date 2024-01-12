@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -15,6 +15,6 @@ public class HouseWithRole {
     String id;
     String name;
     String information;
-    Date date;
+    LocalDate date;
     Boolean role;
 }

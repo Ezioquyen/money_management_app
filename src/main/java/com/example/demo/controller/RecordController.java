@@ -55,7 +55,6 @@ public class RecordController {
     }
 
 
-
     @PutMapping("/save/{id}")
     public String saveRecord(@RequestBody RecordBody recordBody, @PathVariable String id) {
         recordService.saveRecord(recordBody, id);
@@ -76,10 +75,19 @@ public class RecordController {
     public Integer findDebtMoneyByDate(@PathVariable Integer userId, @PathVariable String houseId, @RequestParam String year, @RequestParam String month) {
         return recordService.findDebtMoneyByDate(userId, houseId, year, month);
     }
+
     @GetMapping("/getById/{id}")
-    public ResponseEntity<?> getRecordById(@PathVariable("id") String id){
+    public ResponseEntity<?> getRecordById(@PathVariable("id") String id) {
         return ResponseEntity.ok(recordService.getRecordById(id));
     }
 
+    @GetMapping("/getRemovedById/{id}")
+    public ResponseEntity<?> getRemovedRecordById(@PathVariable("id") String id) {
+        return ResponseEntity.ok(recordService.getRemovedRecordById(id));
+    }
 
+    @PutMapping("/remove/{id}")
+    void removeRecordById(@PathVariable("id") String id) {
+        recordService.removeRecordById(id);
+    }
 }
