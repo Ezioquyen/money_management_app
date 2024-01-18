@@ -67,7 +67,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void updateUserInformationById(Integer userId, String email, String username) {
+    public void updateUserInformationById(Integer userId, String username, String email) {
         userRepository.updateUserInformationById(userId, username, email);
     }
 

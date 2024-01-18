@@ -25,6 +25,6 @@ public interface UserService {
      boolean existUserHouseByUserId(Integer id);
      void updateUserToken(Integer id, String deviceToken);
      void updateLeaveTimeById(Integer userId, String houseId, LocalDate date);
-     void updateUserInformationById(Integer userId,String email,String username);
+     void updateUserInformationById(Integer userId,String username,String email);
      Boolean existByEmail(String email);
 }
